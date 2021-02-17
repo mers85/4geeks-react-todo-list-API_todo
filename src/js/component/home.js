@@ -1,24 +1,48 @@
 import React from "react";
+import { useState } from "react";
+import { ItemsRemain } from "./itemsRemain.js";
+import { Input } from "./input.js";
+import { TaskItem } from "./taskItem.js";
 
 //include images into your bundle
 import rigoImage from "../../img/rigo-baby.jpg";
 
 //create your first component
 export function Home() {
+	const [tasks, setTasks] = useState([]);
+
+	function AddTask(event) {
+		setTasks([...tasks, { id: tasks.length, text: event.target.value }]);
+	}
+
+	function deleteTask(event, task_id) {
+		setTasks(tasks.filter(task => task.id !== task_id));
+	}
+
 	return (
-		<div className="text-center mt-5">
-			<h1>Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
+		<div className="container mt-5">
+			<div className="row">
+				<div className="col-10">
+					<div className="card">
+						<ul className="list-group list-group-flush">
+							<Input onKeyDown={AddTask} />
+
+							{tasks.map((task, index) => {
+								return (
+									<TaskItem
+										key={task.id}
+										taskId={task.id}
+										taskText={task.text}
+										onClickDelete={deleteTask}
+									/>
+								);
+							})}
+
+							<ItemsRemain itemsRemain={tasks.length} />
+						</ul>
+					</div>
+				</div>
+			</div>
 		</div>
 	);
 }
