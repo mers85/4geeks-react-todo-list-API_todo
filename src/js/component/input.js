@@ -7,12 +7,11 @@ import rigoImage from "../../img/rigo-baby.jpg";
 
 //create your first component
 export function Input(props) {
-	const [task, setTask] = useState("");
-
-	function onKeyDown() {
+	function onkeydownAddTask(event) {
+		//const [task, setTask] = useState("");
 		if (event.key === "Enter" && event.target.value !== "") {
-			props.onKeyDown(event, task);
-			//setTask(task => (task = "")); ¿pór qué no funciona?
+			props.onKeyDown(event);
+			//setTask(task => (task = "")); //¿pór qué no funciona?
 			event.target.value = "";
 		}
 	}
@@ -20,10 +19,7 @@ export function Input(props) {
 	return (
 		<div className="list-group-item">
 			<input
-				onKeyDown={onKeyDown}
-				onChange={event => {
-					setTask(event.target.value);
-				}}
+				onKeyDown={onkeydownAddTask}
 				type="text"
 				className="form-control border-0"
 				placeholder="Enter your task"></input>

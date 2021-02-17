@@ -22,7 +22,8 @@ export function Home() {
 	return (
 		<div className="container mt-5">
 			<div className="row">
-				<div className="col-10">
+				<div className="col-10 bg-light p-3 rounded">
+					<h3 className="text-muted">{"Todo's List"}</h3>
 					<div className="card">
 						<ul className="list-group list-group-flush">
 							<Input onKeyDown={AddTask} />
