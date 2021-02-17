@@ -16,10 +16,15 @@ export function Input(props) {
 		}
 	}
 
+	function showDraft(event) {
+		props.onChange(event.target.value);
+	}
+
 	return (
 		<div className="list-group-item">
 			<input
 				onKeyDown={onkeydownAddTask}
+				onChange={showDraft}
 				type="text"
 				className="form-control border-0"
 				placeholder="Enter your task"></input>
@@ -28,5 +33,6 @@ export function Input(props) {
 }
 
 Input.propTypes = {
-	onKeyDown: PropTypes.func
+	onKeyDown: PropTypes.func,
+	onChange: PropTypes.func
 };
