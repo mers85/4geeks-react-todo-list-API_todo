@@ -2,40 +2,59 @@ import React from "react";
 import PropTypes from "prop-types";
 import { useState } from "react";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
-
-//create your first component
 export function TaskItem(props) {
-	function onClickDelete() {
-		props.onClickDelete(event, props.taskId);
-	}
+	const [text, setText] = useState(props.task.title);
+
+	let task = props.task;
 
 	function hideButton(event) {
-		event.target.lastChild.classList.add("d-none");
+		event.currentTarget.firstChild.lastChild.classList.add("d-none");
 	}
-	function showButton(e) {
-		event.target.lastChild.classList.remove("d-none");
+	function showButton(event) {
+		event.currentTarget.firstChild.lastChild.classList.remove("d-none");
 	}
 	return (
 		<li
 			className="list-group-item"
-			id={props.taskId}
 			onMouseOver={showButton}
 			onMouseLeave={hideButton}>
-			{props.taskText}
-			<button
-				type="button"
-				onClick={onClickDelete}
-				className="close d-none">
-				<span aria-hidden="true">&times;</span>
-			</button>
+			<div className="input-group">
+				<input
+					type="text"
+					className="form-control border-0"
+					defaultValue={text}
+					onChange={event => {
+						setText(event.target.value);
+					}}
+					aria-describedby="basic-addon2"
+				/>
+				<div className="input-group-append d-none">
+					<button
+						type="button"
+						id="saveEditItem"
+						onClick={event => {
+							props.onClickSave(task.id, text);
+						}}
+						className="btn btn-outline-secondary">
+						save
+					</button>
+					<button
+						type="button"
+						id="deleteItem"
+						onClick={event => {
+							props.onClickDelete(task.id);
+						}}
+						className="btn btn-outline-secondary">
+						<span aria-hidden="true">delete</span>
+					</button>
+				</div>
+			</div>
 		</li>
 	);
 }
 
 TaskItem.propTypes = {
-	taskId: PropTypes.number,
-	taskText: PropTypes.string,
+	task: PropTypes.object,
+	onClickSave: PropTypes.func,
 	onClickDelete: PropTypes.func
 };
