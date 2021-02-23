@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export function Input(props) {
 	function onkeydownAddTask(event) {
 		if (event.key === "Enter" && event.target.value !== "") {
-			props.onKeyDown(event);
+			props.onKeyDown(event.target.value);
 			event.target.value = "";
 		}
 	}

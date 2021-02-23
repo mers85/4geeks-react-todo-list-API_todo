@@ -15,66 +15,36 @@ export function Home() {
 	const [error, setError] = useState("");
 
 	useEffect(() => {
-		fetch(BASE_URL + "sss/?userId=1", {
+		fetch(BASE_URL + "todos/?userId=1", {
 			method: "get",
 			headers: {
 				"Content-Type": "application/json"
 			}
 		})
 			.then(response => {
-				console.log(response);
 				if (response.ok) {
 					return response.json();
-				} else if (response.status !== 200) {
+				} else {
 					setError(response.statusText);
 				}
 			})
 			.then(json => {
-				setTasks(json);
+				if (json) {
+					setTasks(json);
+				}
 			})
 			.catch(error => {
-				//error handling
-				console.log(error);
+				setError(error);
 			});
 	}, []);
 
-	function CreateTask(event) {
+	function createTask(taskTitle) {
 		fetch(BASE_URL + "todos/", {
 			method: "POST",
 			headers: {
 				"Content-type": "application/json; charset=UTF-8"
 			},
 			body: JSON.stringify({
-				title: event.target.value,
-				userId: 1
-			})
-		})
-			.then(response => {
-				if (response.ok) {
-					return response.json();
-				}
-			})
-			.then(json => {
-				setDraftTask(draftTask => (draftTask = ""));
-				setDraftTaskShow(draftTaskShow => (draftTaskShow = "d-none"));
-
-				setTasks([...tasks, { title: json.title }]);
-			});
-	}
-
-	function showDraft(value) {
-		setDraftTask(draftTask => (draftTask = value));
-		setDraftTaskShow(draftTaskShow => (draftTaskShow = ""));
-	}
-
-	function EditTask(id, taskTitle) {
-		fetch(BASE_URL + "todos/" + id, {
-			method: "PUT",
-			headers: {
-				"Content-type": "application/json; charset=UTF-8"
-			},
-			body: JSON.stringify({
-				id: id,
 				title: taskTitle,
 				userId: 1
 			})
@@ -85,7 +55,44 @@ export function Home() {
 				}
 			})
 			.then(json => {
+				setDraftTask("");
+				setDraftTaskShow("d-none");
+
 				setTasks([...tasks, { title: json.title }]);
+			});
+	}
+
+	function showDraft(value) {
+		setDraftTask(value);
+		setDraftTaskShow("");
+	}
+
+	function editTask(id, taskTitle) {
+		let fetchOption = {
+			method: "PUT",
+			headers: {
+				"Content-type": "application/json; charset=UTF-8"
+			},
+			body: JSON.stringify({
+				id: id,
+				title: taskTitle,
+				userId: 1
+			})
+		};
+		fetch(BASE_URL + "todos/" + id, fetchOption)
+			.then(response => {
+				if (response.ok) {
+					return response.json();
+				}
+			})
+			.then(json => {
+				let newTasks = [...tasks];
+				let taskIndex = newTasks.findIndex(task => task.id === id);
+				if (taskIndex > -1) {
+					newTasks[taskIndex].title = json.title;
+				}
+
+				setTasks([...newTasks]);
 			});
 	}
 
@@ -124,7 +131,7 @@ export function Home() {
 						<div className="card">
 							<ul className="list-group list-group-flush">
 								<Input
-									onKeyDown={CreateTask}
+									onKeyDown={createTask}
 									onChange={showDraft}
 								/>
 								<DraftTaskItem
@@ -137,7 +144,7 @@ export function Home() {
 										<TaskItem
 											key={task.id}
 											task={task}
-											onClickSave={EditTask}
+											onClickSave={editTask}
 											onClickDelete={deleteTask}
 										/>
 									);
