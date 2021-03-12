@@ -110,8 +110,10 @@ export function Home() {
 						return true;
 					}
 				});
-				newTasks.splice(positionToDelete, 1);
-				setTasks(newTasks);
+				if (positionToDelete > -1) {
+					newTasks.splice(positionToDelete, 1);
+					setTasks(newTasks);
+				}
 			} else {
 				console.log("OMG!!!");
 			}
