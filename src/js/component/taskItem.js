@@ -4,20 +4,19 @@ import { useState } from "react";
 
 export function TaskItem(props) {
 	const [text, setText] = useState(props.task.title);
+	const [hideButton, setHideButton] = useState("d-none");
 
 	let task = props.task;
 
-	function hideButton(event) {
-		event.currentTarget.firstChild.lastChild.classList.add("d-none");
-	}
-	function showButton(event) {
-		event.currentTarget.firstChild.lastChild.classList.remove("d-none");
-	}
 	return (
 		<li
 			className="list-group-item"
-			onMouseOver={showButton}
-			onMouseLeave={hideButton}>
+			onMouseOver={event => {
+				setHideButton("");
+			}}
+			onMouseLeave={event => {
+				setHideButton("d-none");
+			}}>
 			<div className="input-group">
 				<input
 					type="text"
@@ -28,7 +27,7 @@ export function TaskItem(props) {
 					}}
 					aria-describedby="basic-addon2"
 				/>
-				<div className="input-group-append d-none">
+				<div className={"input-group-append " + hideButton}>
 					<button
 						type="button"
 						id="saveEditItem"
